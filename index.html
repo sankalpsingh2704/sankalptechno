@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sankalp Narayan — Technical Architect &amp; Technical Evangelist</title>
+<meta name="description" content="Sankalp Narayan — Technical Architect, Technical Lead & Technical Evangelist. ~10 years architecting enterprise web platforms and Agentic AI systems across automotive, telecom, retail and supply-chain. Deep dive into the Renoverse Next-Gen GraphQL API Platform." />
+<meta name="author" content="Sankalp Narayan" />
+
+<!-- Open Graph / social preview -->
+<meta property="og:type" content="profile" />
+<meta property="og:title" content="Sankalp Narayan — Technical Architect & Technical Evangelist" />
+<meta property="og:description" content="~10 years architecting enterprise web platforms & Agentic AI systems. Sole architect of the Renoverse Next-Gen GraphQL API Platform." />
+<meta property="og:image" content="assets/profile.jpg" />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%236366f1'/%3E%3Ctext x='50' y='68' font-size='58' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ESN%3C/text%3E%3C/svg%3E" />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<!-- Mermaid for live architecture diagrams -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+<style>
+  :root {
+    --bg: #0b1020;
+    --bg2: #0f172a;
+    --surface: #131c30;
+    --surface2: #1a2540;
+    --border: #24314f;
+    --border-soft: #1c2740;
+    --accent: #6366f1;
+    --accent2: #22d3ee;
+    --violet: #8b5cf6;
+    --green: #4ade80;
+    --amber: #fbbf24;
+    --text: #e8edf7;
+    --muted: #94a3b8;
+    --muted2: #6b7a94;
+    --code-bg: #0d1117;
+    --grad: linear-gradient(120deg, #6366f1 0%, #8b5cf6 45%, #22d3ee 100%);
+    --grad-soft: linear-gradient(120deg, rgba(99,102,241,0.18), rgba(34,211,238,0.14));
+    --shadow: 0 20px 60px -20px rgba(0,0,0,0.6);
+    --radius: 18px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 { font-family: 'Space Grotesk', 'Inter', sans-serif; line-height: 1.2; }
+  a { color: inherit; text-decoration: none; }
+  section { scroll-margin-top: 84px; }
+  ::selection { background: rgba(99,102,241,0.4); color: #fff; }
+
+  /* Ambient animated background blobs */
+  .bg-fx { position: fixed; inset: 0; z-index: -2; overflow: hidden; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.5; }
+  .blob.b1 { width: 620px; height: 620px; background: radial-gradient(circle, #6366f1, transparent 60%); top: -180px; left: -120px; animation: float1 22s ease-in-out infinite; }
+  .blob.b2 { width: 520px; height: 520px; background: radial-gradient(circle, #22d3ee, transparent 60%); top: 30%; right: -160px; animation: float2 26s ease-in-out infinite; }
+  .blob.b3 { width: 480px; height: 480px; background: radial-gradient(circle, #8b5cf6, transparent 60%); bottom: -160px; left: 30%; animation: float1 30s ease-in-out infinite; }
+  .grid-fx { position: fixed; inset: 0; z-index: -1;
+    background-image: linear-gradient(rgba(148,163,184,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.045) 1px, transparent 1px);
+    background-size: 46px 46px; mask-image: radial-gradient(ellipse at 50% 0%, #000 30%, transparent 75%); }
+  @keyframes float1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(40px,50px); } }
+  @keyframes float2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-50px,30px); } }
+
+  /* ── Navbar ── */
+  header.nav {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(14px);
+    background: rgba(11,16,32,0.72);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+  .brand { display: flex; align-items: center; gap: 12px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; letter-spacing: 0.02em; }
+  .brand .mark { width: 38px; height: 38px; border-radius: 11px; background: var(--grad); display: grid; place-items: center; color: #fff; font-size: 15px; box-shadow: 0 6px 20px -6px rgba(99,102,241,0.8); }
+  .brand .mark span { transform: translateY(0.5px); }
+  .brand small { display: block; font-family: 'Inter', sans-serif; font-weight: 500; font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  .nav-links { display: flex; gap: 4px; align-items: center; }
+  .nav-links a { padding: 8px 14px; font-size: 14px; color: var(--muted); border-radius: 10px; transition: all 0.15s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--text); background: rgba(99,102,241,0.12); }
+  .nav-cta { padding: 9px 18px !important; background: var(--grad); color: #fff !important; font-weight: 600; box-shadow: 0 8px 22px -8px rgba(99,102,241,0.9); }
+  .nav-cta:hover { filter: brightness(1.08); }
+  .menu-btn { display: none; background: none; border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 8px 12px; font-size: 18px; cursor: pointer; }
+
+  /* ── Layout ── */
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .section-pad { padding: 90px 0 30px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent2); margin-bottom: 14px; }
+  .eyebrow::before { content: ''; width: 26px; height: 2px; background: var(--grad); border-radius: 2px; }
+  .section-title { font-size: clamp(26px, 4vw, 38px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 14px; }
+  .section-intro { color: var(--muted); max-width: 720px; font-size: 16px; margin-bottom: 34px; }
+  .gradient-text { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  /* ── Hero ── */
+  .hero { padding: 70px 0 40px; }
+  .hero-grid { display: grid; grid-template-columns: 1.25fr 0.85fr; gap: 54px; align-items: center; }
+  .avail { display: inline-flex; align-items: center; gap: 9px; padding: 7px 14px; border: 1px solid var(--border); border-radius: 999px; font-size: 13px; color: var(--muted); background: rgba(255,255,255,0.02); margin-bottom: 22px; }
+  .avail .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 0 rgba(74,222,128,0.6); animation: pulse 2s infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(74,222,128,0.6); } 70% { box-shadow: 0 0 0 10px rgba(74,222,128,0); } 100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); } }
+  .hero h1 { font-size: clamp(38px, 6vw, 62px); font-weight: 700; letter-spacing: -0.03em; margin-bottom: 12px; }
+  .hero .role { font-size: clamp(18px, 2.4vw, 23px); font-weight: 600; color: var(--text); margin-bottom: 18px; }
+  .hero .role .sep { color: var(--muted2); margin: 0 10px; }
+  .hero p.lead { font-size: 17px; color: var(--muted); max-width: 620px; margin-bottom: 26px; }
+  .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 30px; }
+  .hero-tags span { font-size: 12.5px; padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted); background: rgba(255,255,255,0.02); }
+  .btn-row { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn { display: inline-flex; align-items: center; gap: 9px; padding: 12px 22px; border-radius: 12px; font-weight: 600; font-size: 14.5px; border: 1px solid var(--border); color: var(--text); transition: all 0.18s; cursor: pointer; }
+  .btn svg { width: 17px; height: 17px; }
+  .btn.primary { background: var(--grad); border-color: transparent; box-shadow: 0 12px 30px -10px rgba(99,102,241,0.9); }
+  .btn.primary:hover { transform: translateY(-2px); filter: brightness(1.08); }
+  .btn.ghost:hover { border-color: var(--accent); background: rgba(99,102,241,0.1); transform: translateY(-2px); }
+
+  /* Avatar card */
+  .avatar-card { position: relative; }
+  .avatar-frame { position: relative; border-radius: 26px; padding: 8px; background: var(--grad); box-shadow: var(--shadow); }
+  .avatar-frame::before { content: ''; position: absolute; inset: -2px; border-radius: 28px; background: var(--grad); filter: blur(22px); opacity: 0.55; z-index: -1; }
+  .avatar-frame img { width: 100%; display: block; border-radius: 20px; aspect-ratio: 1/1; object-fit: cover; background: var(--bg2); }
+  .avatar-badge { position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); white-space: nowrap; display: flex; align-items: center; gap: 9px; padding: 10px 18px; border-radius: 999px; background: var(--surface2); border: 1px solid var(--border); font-size: 13px; font-weight: 600; box-shadow: var(--shadow); }
+  .avatar-badge .mvp { width: 20px; height: 20px; border-radius: 6px; background: var(--grad); display: grid; place-items: center; font-size: 11px; }
+  .float-chip { position: absolute; padding: 9px 13px; border-radius: 12px; background: rgba(19,28,48,0.85); backdrop-filter: blur(8px); border: 1px solid var(--border); font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; box-shadow: var(--shadow); }
+  .float-chip .ic { font-size: 15px; }
+  .float-chip.c1 { top: 16px; left: -34px; animation: bob 5s ease-in-out infinite; }
+  .float-chip.c2 { top: 44%; right: -30px; animation: bob 6s ease-in-out infinite 0.5s; }
+  .float-chip.c3 { bottom: 34px; left: -26px; animation: bob 5.5s ease-in-out infinite 1s; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+
+  /* ── Stats ── */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 66px; }
+  .stat { padding: 24px; border: 1px solid var(--border); border-radius: var(--radius); background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0)); text-align: center; }
+  .stat .num { font-family: 'Space Grotesk', sans-serif; font-size: 34px; font-weight: 700; }
+  .stat .lbl { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  /* ── Cards / grids ── */
+  .card { border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); padding: 26px; transition: transform 0.2s, border-color 0.2s; }
+  .card:hover { transform: translateY(-4px); border-color: var(--accent); }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+
+  .value-card .ic { width: 46px; height: 46px; border-radius: 12px; background: var(--grad-soft); border: 1px solid var(--border); display: grid; place-items: center; font-size: 22px; margin-bottom: 16px; }
+  .value-card h3 { font-size: 18px; margin-bottom: 8px; }
+  .value-card p { font-size: 14.5px; color: var(--muted); }
+
+  /* ── Signature project ── */
+  .spotlight { position: relative; border: 1px solid var(--border); border-radius: 26px; background: linear-gradient(180deg, rgba(99,102,241,0.08), rgba(19,28,48,0.6)); padding: 40px; overflow: hidden; }
+  .spotlight::before { content: ''; position: absolute; top: -60px; right: -60px; width: 260px; height: 260px; background: radial-gradient(circle, rgba(34,211,238,0.22), transparent 65%); }
+  .sp-head { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-bottom: 8px; }
+  .sp-head h2 { font-size: clamp(24px, 3.2vw, 33px); }
+  .pill { font-size: 11.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--border); color: var(--accent2); background: rgba(34,211,238,0.08); }
+  .pill.sole { color: var(--amber); border-color: rgba(251,191,36,0.35); background: rgba(251,191,36,0.08); }
+  .sp-sub { color: var(--muted); max-width: 780px; margin-bottom: 26px; font-size: 15.5px; }
+
+  .stack-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 30px; }
+  .chip { font-size: 12.5px; font-family: 'JetBrains Mono', monospace; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--code-bg); color: #c8d3e6; }
+  .chip b { color: var(--accent2); font-weight: 500; }
+
+  .diagram-wrap { border: 1px solid var(--border); border-radius: 16px; background: var(--code-bg); padding: 22px; margin: 8px 0 8px; overflow-x: auto; }
+  .diagram-cap { font-size: 13px; color: var(--muted2); margin: 4px 0 26px; text-align: center; font-style: italic; }
+  .mermaid { display: flex; justify-content: center; min-width: 640px; }
+
+  .hl-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 8px; }
+  .hl { border: 1px solid var(--border); border-radius: 14px; padding: 20px; background: rgba(255,255,255,0.02); }
+  .hl .ic { font-size: 20px; margin-bottom: 10px; display: block; }
+  .hl h4 { font-size: 15.5px; margin-bottom: 6px; }
+  .hl p { font-size: 13.5px; color: var(--muted); }
+  .hl code { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent2); background: rgba(34,211,238,0.08); padding: 1px 6px; border-radius: 5px; }
+
+  .subblock-title { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: var(--text); margin: 34px 0 14px; }
+  .subblock-title .n { width: 26px; height: 26px; border-radius: 8px; background: var(--grad); display: grid; place-items: center; font-size: 13px; color: #fff; font-family: 'Space Grotesk', sans-serif; }
+
+  /* ── Projects grid ── */
+  .proj { display: flex; flex-direction: column; height: 100%; }
+  .proj .top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .proj .co { font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent2); }
+  .proj .dom { font-size: 11px; color: var(--muted2); border: 1px solid var(--border); padding: 3px 9px; border-radius: 999px; }
+  .proj h3 { font-size: 18.5px; margin-bottom: 10px; }
+  .proj p { font-size: 14px; color: var(--muted); margin-bottom: 16px; flex: 1; }
+  .proj .arch { font-size: 12px; font-family: 'JetBrains Mono', monospace; color: var(--muted2); border-top: 1px dashed var(--border); padding-top: 12px; }
+  .proj .arch b { color: #c8d3e6; font-weight: 500; }
+
+  /* ── Skills ── */
+  .skill-cat { border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); padding: 22px; }
+  .skill-cat h3 { font-size: 15px; margin-bottom: 14px; display: flex; align-items: center; gap: 9px; }
+  .skill-cat h3 .ic { font-size: 18px; }
+  .skill-cat .tags { display: flex; flex-wrap: wrap; gap: 7px; }
+  .skill-cat .tags span { font-size: 12.5px; padding: 5px 11px; border-radius: 8px; background: rgba(99,102,241,0.09); border: 1px solid var(--border); color: #cdd7ea; transition: all 0.15s; }
+  .skill-cat .tags span:hover { background: rgba(34,211,238,0.14); border-color: var(--accent2); color: #fff; }
+
+  /* ── Timeline ── */
+  .timeline { position: relative; margin-top: 12px; padding-left: 30px; }
+  .timeline::before { content: ''; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(180deg, var(--accent), var(--accent2), transparent); }
+  .tl-item { position: relative; padding: 0 0 34px 26px; }
+  .tl-item::before { content: ''; position: absolute; left: -30px; top: 4px; width: 16px; height: 16px; border-radius: 50%; background: var(--bg); border: 3px solid var(--accent); box-shadow: 0 0 0 4px rgba(99,102,241,0.15); }
+  .tl-item.now::before { border-color: var(--green); box-shadow: 0 0 0 4px rgba(74,222,128,0.18); }
+  .tl-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+  .tl-head h3 { font-size: 18px; }
+  .tl-head .when { font-size: 12.5px; font-family: 'JetBrains Mono', monospace; color: var(--accent2); }
+  .tl-role { font-size: 13.5px; color: var(--text); font-weight: 600; margin-bottom: 8px; }
+  .tl-role .domain { color: var(--muted2); font-weight: 400; }
+  .tl-item ul { list-style: none; }
+  .tl-item li { font-size: 14px; color: var(--muted); padding-left: 18px; position: relative; margin-bottom: 5px; }
+  .tl-item li::before { content: '▹'; position: absolute; left: 0; color: var(--accent2); }
+
+  /* ── Contact ── */
+  .contact-card { text-align: center; border: 1px solid var(--border); border-radius: 26px; padding: 54px 30px; background: linear-gradient(180deg, rgba(99,102,241,0.1), rgba(19,28,48,0.5)); position: relative; overflow: hidden; }
+  .contact-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% -20%, rgba(34,211,238,0.18), transparent 60%); }
+  .contact-card h2 { font-size: clamp(26px, 4vw, 40px); margin-bottom: 12px; position: relative; }
+  .contact-card p { color: var(--muted); max-width: 560px; margin: 0 auto 28px; position: relative; }
+  .contact-methods { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; position: relative; }
+
+  /* ── Footer ── */
+  footer { border-top: 1px solid var(--border-soft); margin-top: 80px; padding: 34px 0; }
+  .foot-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; color: var(--muted2); font-size: 13.5px; }
+  .foot-inner a { color: var(--muted); }
+  .foot-inner a:hover { color: var(--accent2); }
+
+  /* Reveal animation */
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 60px; }
+    .avatar-card { max-width: 360px; margin: 0 auto; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .grid-2, .grid-3, .hl-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .menu-btn { display: block; }
+    .nav-links.open { display: flex; position: absolute; top: 66px; right: 16px; left: 16px; flex-direction: column; align-items: stretch; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 10px; gap: 4px; box-shadow: var(--shadow); }
+    .nav-links.open a { padding: 12px 14px; }
+    .spotlight { padding: 26px 18px; }
+    .float-chip { display: none; }
+  }
+  @media (max-width: 560px) {
+    .stats { grid-template-columns: 1fr 1fr; }
+    .section-pad { padding: 64px 0 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Ambient background -->
+<div class="bg-fx" aria-hidden="true">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+<div class="grid-fx" aria-hidden="true"></div>
+
+<!-- ── Navbar ── -->
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#top" class="brand">
+      <span class="mark"><span>SN</span></span>
+      <span>Sankalp Narayan<small>Architect · Evangelist</small></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#about">About</a>
+      <a href="#signature">Signature Project</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#journey">Journey</a>
+      <a href="#contact" class="nav-cta">Let's talk</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle menu">☰</button>
+  </div>
+</header>
+
+<main id="top" class="wrap">
+
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <div class="hero-grid">
+      <div class="reveal in">
+        <div class="avail"><span class="dot"></span> Open to Technical Architect / Lead roles — Relocation &amp; Remote</div>
+        <h1>Hi, I'm <span class="gradient-text">Sankalp Narayan</span></h1>
+        <div class="role">Technical Architect <span class="sep">·</span> Technical Lead <span class="sep">·</span> <span class="gradient-text">Technical Evangelist</span></div>
+        <p class="lead">
+          ~10 years designing and shipping enterprise-grade web platforms and <b style="color:var(--text)">Agentic AI systems</b>
+          across automotive, telecom, retail and supply-chain. I own architecture end-to-end — from React front-ends and
+          GraphQL APIs to cloud-native CI/CD on GCP &amp; Azure with Docker and Kubernetes.
+        </p>
+        <div class="hero-tags">
+          <span>React · TypeScript</span>
+          <span>Node.js · Apollo GraphQL</span>
+          <span>Agentic AI · LangGraph · Gemini</span>
+          <span>MCP Servers</span>
+          <span>Kubernetes · GCP</span>
+          <span>JWT + mTLS</span>
+        </div>
+        <div class="btn-row">
+          <a href="#signature" class="btn primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+            Explore my flagship platform
+          </a>
+          <!-- Drop your PDF at assets/Sankalp-Narayan-Resume.pdf to enable this button -->
+          <a href="assets/Sankalp-Narayan-Resume.pdf" class="btn ghost" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+            Download Résumé
+          </a>
+        </div>
+      </div>
+
+      <div class="avatar-card reveal in">
+        <div class="avatar-frame">
+          <!-- To use your own photo: add the file at profile/assets/profile.jpg (any square image). -->
+          <img src="assets/profile.jpg" alt="Sankalp Narayan"
+               onerror="this.onerror=null;this.src='assets/profile-placeholder.svg'" />
+          <div class="avatar-badge"><span class="mvp">★</span> Technical Evangelist</div>
+        </div>
+        <div class="float-chip c1"><span class="ic">🧠</span> Agentic AI</div>
+        <div class="float-chip c2"><span class="ic">⚙️</span> Sole Architect</div>
+        <div class="float-chip c3"><span class="ic">🔐</span> mTLS + JWT</div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat reveal"><div class="num gradient-text" data-count="10">~10</div><div class="lbl">Years of Engineering</div></div>
+      <div class="stat reveal"><div class="num gradient-text" data-count="6">6</div><div class="lbl">Production Apps Served</div></div>
+      <div class="stat reveal"><div class="num gradient-text" data-count="8">8+</div><div class="lbl">Enterprise Projects</div></div>
+      <div class="stat reveal"><div class="num gradient-text" data-count="5">5</div><div class="lbl">Industry Domains</div></div>
+    </div>
+  </section>
+
+  <!-- ── About / Value ── -->
+  <section id="about" class="section-pad">
+    <div class="reveal">
+      <div class="eyebrow">About</div>
+      <h2 class="section-title">An architect who codes, mentors &amp; <span class="gradient-text">evangelizes</span></h2>
+      <p class="section-intro">
+        I recently architected an entire next-generation API platform single-handedly — including an Agentic AI layer
+        (Gemini + LangGraph), MCP tool servers, and dual-mode (JWT + mTLS) authentication. Beyond building, I lead AI
+        innovation, set engineering standards, run code reviews and mentor teams so good architecture spreads.
+      </p>
+    </div>
+    <div class="grid-3">
+      <div class="card value-card reveal">
+        <div class="ic">🏗️</div>
+        <h3>End-to-End Architecture</h3>
+        <p>System design, microservices &amp; API-platform design — front-end, API, data, and cloud CI/CD owned as one coherent system built for scale and reliability.</p>
+      </div>
+      <div class="card value-card reveal">
+        <div class="ic">🤖</div>
+        <h3>Applied &amp; Agentic AI</h3>
+        <p>Agentic AI with LangGraph + Gemini, MCP tool &amp; Docker-based servers, RAG pipelines and local-LLM POCs — turning LLMs into dependable, tool-using products.</p>
+      </div>
+      <div class="card value-card reveal">
+        <div class="ic">📣</div>
+        <h3>Evangelism &amp; Leadership</h3>
+        <p>Led AI innovation across the company, drove POCs, mentored engineers, ran code reviews and delivered training &amp; interviews — a multiplier for every team I join.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Signature project ── -->
+  <section id="signature" class="section-pad">
+    <div class="reveal">
+      <div class="eyebrow">Signature Project · Live in Production</div>
+      <h2 class="section-title">Renoverse — Next-Gen <span class="gradient-text">GraphQL API Platform</span></h2>
+      <p class="section-intro">
+        A cloud-native, Agentic-AI backend I architected and built as sole architect at Renault Nissan. It powers
+        production applications across Web and Android Automotive OS (IVI) from a single GraphQL gateway — with an
+        AI chatbot streamed over GraphQL Subscriptions, MCP tool servers, and dual-mode authentication.
+      </p>
+    </div>
+
+    <div class="spotlight reveal">
+      <div class="sp-head">
+        <h2>Renoverse Platform</h2>
+        <span class="pill sole">Sole Architect</span>
+        <span class="pill">pnpm Monorepo</span>
+        <span class="pill">Agentic AI</span>
+      </div>
+      <p class="sp-sub">
+        Four coordinated services in one monorepo — a GraphQL/Express gateway, a LangGraph agent orchestrator, a dedicated
+        MCP server, and a React front-end — deployed to Kubernetes on GCP with Docker CI/CD.
+      </p>
+
+      <div class="stack-row">
+        <span class="chip"><b>api</b> · Apollo Server 5 + Express 5</span>
+        <span class="chip"><b>subscriptions</b> · graphql-ws</span>
+        <span class="chip"><b>db</b> · MongoDB + Mongoose</span>
+        <span class="chip"><b>agent</b> · LangGraph + Gemini</span>
+        <span class="chip"><b>mcp-server</b> · MCP SDK (Streamable HTTP)</span>
+        <span class="chip"><b>app</b> · React 19 + Vite + Tailwind</span>
+        <span class="chip"><b>ai</b> · Ollama RAG + web-push</span>
+        <span class="chip"><b>infra</b> · Docker · Kubernetes · GCP</span>
+      </div>
+
+      <!-- Diagram 1: system architecture -->
+      <div class="subblock-title"><span class="n">1</span> System Architecture — as implemented</div>
+      <div class="diagram-wrap">
+        <div class="mermaid">
+flowchart TB
+    subgraph CLIENTS["Clients"]
+      WEB["Web App<br/>React 19 · Vite · Apollo Client"]
+      IVI["Android Automotive OS<br/>IVI In-Vehicle App"]
+    end
+
+    subgraph GATEWAY["GraphQL / Express Gateway · Apollo Server 5"]
+      GQL["Queries · Mutations<br/>Subscriptions (graphql-ws)"]
+      REST["Express REST<br/>Image + PDF service"]
+      AUTH["Auth layer<br/>JWT · mTLS · RBAC"]
+    end
+
+    WEB -- "Bearer JWT / WSS" --> GATEWAY
+    IVI -- "Mutual TLS client cert" --> GATEWAY
+
+    GATEWAY -- "Mongoose" --> MONGO[("MongoDB<br/>users · agent data")]
+    GATEWAY -- "assets" --> ASSETS[("Asset Storage<br/>GCS / S3")]
+    GATEWAY -- "routes AI tasks + read-only token" --> AGENT
+
+    subgraph AGENT["Agent Orchestrator · LangGraph / Node.js"]
+      SG["StateGraph · ToolNode<br/>MemorySaver checkpointer"]
+      GEM["Gemini (ChatGoogle)"]
+    end
+
+    AGENT <-->|"Streamable HTTP (MCP)"| MCP
+    AGENT -- "SSE token stream" --> GATEWAY
+
+    subgraph MCP["MCP Server · Model Context Protocol"]
+      NAT["Native tools<br/>calculator · vehicles · location · rag"]
+      PRX["MongoDB MCP proxy<br/>(sidecar)"]
+    end
+
+    NAT -- "GraphQL (read-only service token)" --> GATEWAY
+    PRX --> MONGO
+    AGENT -- "inference" --> LLM["LLM Inference<br/>Gemini API / Ollama"]
+    GATEWAY -- "embeddings" --> OLL["Ollama · PDF RAG"]
+
+    classDef gw fill:#1e1b4b,stroke:#6366f1,color:#e8edf7;
+    classDef ag fill:#0e2a33,stroke:#22d3ee,color:#e8edf7;
+    classDef mc fill:#2a1e40,stroke:#8b5cf6,color:#e8edf7;
+    classDef data fill:#0d1117,stroke:#334155,color:#cbd5e1;
+    class GATEWAY,GQL,REST,AUTH gw;
+    class AGENT,SG,GEM ag;
+    class MCP,NAT,PRX mc;
+    class MONGO,ASSETS,LLM,OLL data;
+        </div>
+      </div>
+      <div class="diagram-cap">One gateway, many surfaces — Web &amp; IVI clients, an Agentic AI layer, and MCP tools, all behind unified auth.</div>
+
+      <!-- Diagram 2: agentic request + token downscoping -->
+      <div class="subblock-title"><span class="n">2</span> Agentic Request Flow &amp; Zero-Trust Token Downscoping</div>
+      <div class="diagram-wrap">
+        <div class="mermaid">
+sequenceDiagram
+    autonumber
+    participant C as Client (Web / IVI)
+    participant G as GraphQL Gateway
+    participant A as Agent (LangGraph)
+    participant M as MCP Server
+    C->>G: askAgent(prompt) + Bearer JWT / mTLS
+    G->>G: verify identity + resolve RBAC role
+    G->>G: mint short-lived READ-ONLY service token<br/>(mcp_agent_service · read:all)
+    G->>A: route task + downscoped token
+    A->>A: LangGraph plan → Gemini tool calls
+    A->>M: invoke tool + downscoped token
+    M->>G: fetch data via GraphQL (read-only)
+    G-->>M: data
+    M-->>A: tool result
+    A-->>G: streamed tokens (SSE)
+    G-->>C: GraphQL subscription stream
+        </div>
+      </div>
+      <div class="diagram-cap">The agent acts on the user's behalf but can only read — permissions are intersected, never escalated.</div>
+
+      <!-- Engineering highlights -->
+      <div class="subblock-title"><span class="n">3</span> Engineering Highlights</div>
+      <div class="hl-grid">
+        <div class="hl">
+          <span class="ic">🔐</span>
+          <h4>Dual-Mode Authentication</h4>
+          <p><b>JWT</b> for web apps and <b>Mutual TLS</b> for in-vehicle IVI clients on the same HTTPS server (<code>requestCert</code>), so browsers and cars authenticate side-by-side.</p>
+        </div>
+        <div class="hl">
+          <span class="ic">🧭</span>
+          <h4>Agentic AI Orchestration</h4>
+          <p>A LangGraph <code>StateGraph</code> with tool nodes and a memory checkpointer drives Gemini through multi-step tool calls, streamed live to the UI.</p>
+        </div>
+        <div class="hl">
+          <span class="ic">🧰</span>
+          <h4>MCP Tool Server</h4>
+          <p>A dedicated Streamable-HTTP MCP server exposes native tools and <b>proxies the MongoDB MCP server</b> as a Kubernetes sidecar — no Docker-in-pod.</p>
+        </div>
+        <div class="hl">
+          <span class="ic">🛡️</span>
+          <h4>Zero-Trust Downscoping</h4>
+          <p>API → agent → MCP → API calls carry a minted <code>read:all</code> service token. Permissions are intersected so the chain can never write.</p>
+        </div>
+        <div class="hl">
+          <span class="ic">📚</span>
+          <h4>RAG &amp; Local LLMs</h4>
+          <p>A PDF ingestion + retrieval pipeline with Ollama embeddings grounds answers in real documents; POCs for local Gemma models.</p>
+        </div>
+        <div class="hl">
+          <span class="ic">⚡</span>
+          <h4>Real-Time &amp; Push</h4>
+          <p>GraphQL Subscriptions over WebSockets stream agent responses; web-push delivers notifications to clients.</p>
+        </div>
+        <div class="hl">
+          <span class="ic">📦</span>
+          <h4>Monorepo &amp; Codegen</h4>
+          <p>A pnpm workspace (api · agent · app · mcp-server · tests) with GraphQL Code Generator for fully typed schema &amp; client operations.</p>
+        </div>
+        <div class="hl">
+          <span class="ic">☸️</span>
+          <h4>Cloud-Native Delivery</h4>
+          <p>Per-service Docker images and Kubernetes manifests — ingress, TLS &amp; sealed secrets, sidecars — shipped via GCP CI/CD.</p>
+        </div>
+        <div class="hl">
+          <span class="ic">🚗</span>
+          <h4>Automotive-Grade</h4>
+          <p>Designed for OEM constraints: IVI certificate auth, streaming AI in the cabin, and a schema-first contract shared across surfaces.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Architecture principles ── -->
+  <section id="architecture" class="section-pad">
+    <div class="reveal">
+      <div class="eyebrow">How I Architect</div>
+      <h2 class="section-title">Principles behind the <span class="gradient-text">platform</span></h2>
+      <p class="section-intro">The Renoverse platform is opinionated by design. A few principles I keep returning to across projects:</p>
+    </div>
+    <div class="grid-2">
+      <div class="card reveal">
+        <h3 style="margin-bottom:8px">🎯 Schema-first contracts</h3>
+        <p style="color:var(--muted);font-size:14.5px">One GraphQL schema is the single source of truth. Code generation produces typed resolvers and typed client hooks, so the front-end and back-end can never silently drift apart.</p>
+      </div>
+      <div class="card reveal">
+        <h3 style="margin-bottom:8px">🧩 Composable tool boundaries</h3>
+        <p style="color:var(--muted);font-size:14.5px">The agent never touches the database directly. It talks to an MCP server whose tools call the same GraphQL API — so business rules and auth live in exactly one place.</p>
+      </div>
+      <div class="card reveal">
+        <h3 style="margin-bottom:8px">🔒 Least privilege by construction</h3>
+        <p style="color:var(--muted);font-size:14.5px">Roles map to permissions at token-mint time; service tokens are downscoped intersections. Security is a property of the wiring, not an afterthought.</p>
+      </div>
+      <div class="card reveal">
+        <h3 style="margin-bottom:8px">📈 Built to scale &amp; observe</h3>
+        <p style="color:var(--muted);font-size:14.5px">Stateless services, sidecar patterns and Kubernetes-native deployment mean each concern scales independently and fails in isolation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Other projects ── -->
+  <section id="projects" class="section-pad">
+    <div class="reveal">
+      <div class="eyebrow">Selected Work</div>
+      <h2 class="section-title">Projects across <span class="gradient-text">four industries</span></h2>
+      <p class="section-intro">A decade of full-stack ownership — from vehicle telemetry and telecom licensing to supply-chain visibility and product lifecycle management.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card proj reveal">
+        <div class="top"><span class="co">Renault Nissan</span><span class="dom">Automotive</span></div>
+        <h3>Caiman Vehicle Telemetry</h3>
+        <p>Off-board telemetry features — Campaign, Rollout, Business Service, App Admin, Simulation, Metrics Config and a multilevel SSOT signal catalog with React Flow graphs and catalog migration tooling.</p>
+        <div class="arch"><b>Arch:</b> React + Node.js + Apollo GraphQL + MongoDB · Python (Gavial) microservice</div>
+      </div>
+      <div class="card proj reveal">
+        <div class="top"><span class="co">Motorola Solutions</span><span class="dom">Telecom</span></div>
+        <h3>OnePortal Licensing</h3>
+        <p>A licensing platform for TLK devices with direct-customer and reseller dashboards, shipped through Azure DevOps CI/CD with Docker.</p>
+        <div class="arch"><b>Arch:</b> React + Redux + Node.js · Azure DevOps · Docker</div>
+      </div>
+      <div class="card proj reveal">
+        <div class="top"><span class="co">SKF Bearings</span><span class="dom">Industrial</span></div>
+        <h3>Mucapat / Aerocost</h3>
+        <p>Owned the front-end + Node.js architecture; designed a new BAQ bearing module from scratch, EBOM assemblies and a time-logging system as the single technical point of contact.</p>
+        <div class="arch"><b>Arch:</b> React + Redux + Node.js · MySQL · Docker on Azure · IIS/Nginx</div>
+      </div>
+      <div class="card proj reveal">
+        <div class="top"><span class="co">Tesco</span><span class="dom">Retail</span></div>
+        <h3>PLM Platform</h3>
+        <p>Product-lifecycle dashboards, a custom week calendar, onboarding forms and a supplier chat module — with a strong automated testing culture.</p>
+        <div class="arch"><b>Arch:</b> React · Jest + RTL · Cypress · Jenkins CI/CD</div>
+      </div>
+      <div class="card proj reveal">
+        <div class="top"><span class="co">Maersk / Damco</span><span class="dom">Supply-Chain</span></div>
+        <h3>PRANA &amp; Visibility / MDM</h3>
+        <p>Supply-chain applications delivering shipment visibility and master-data management on Azure's serverless data stack.</p>
+        <div class="arch"><b>Arch:</b> React + .NET Core · Cosmos DB · Azure Logic Apps · Data Lake &amp; Factory</div>
+      </div>
+      <div class="card proj reveal">
+        <div class="top"><span class="co">Information Quotient</span><span class="dom">OCR / Automation</span></div>
+        <h3>Invoice Automation (OCR)</h3>
+        <p>An OCR invoice-automation product used across automotive clients such as Hyundai — plus React training and technical interviewing.</p>
+        <div class="arch"><b>Arch:</b> Google Tesseract · .NET MVC · React · PHP · Python</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Skills ── -->
+  <section id="skills" class="section-pad">
+    <div class="reveal">
+      <div class="eyebrow">Capabilities</div>
+      <h2 class="section-title">A full-stack, cloud-native <span class="gradient-text">toolbox</span></h2>
+      <p class="section-intro">Depth across the modern web and AI stack, with the architecture and DevOps skills to ship it to production.</p>
+    </div>
+    <div class="grid-3">
+      <div class="skill-cat reveal">
+        <h3><span class="ic">🏛️</span> Architecture</h3>
+        <div class="tags"><span>End-to-End System Design</span><span>Microservices</span><span>API Platform Design</span><span>Scalable &amp; Reliable Systems</span><span>Coding Standards</span></div>
+      </div>
+      <div class="skill-cat reveal">
+        <h3><span class="ic">🎨</span> Frontend</h3>
+        <div class="tags"><span>React.js</span><span>Redux</span><span>TypeScript</span><span>JavaScript ES6+</span><span>Tailwind CSS</span><span>SCSS / CSS3</span><span>UI/UX</span></div>
+      </div>
+      <div class="skill-cat reveal">
+        <h3><span class="ic">⚙️</span> Backend</h3>
+        <div class="tags"><span>Node.js</span><span>Apollo GraphQL</span><span>Subscriptions</span><span>Express</span><span>REST APIs</span></div>
+      </div>
+      <div class="skill-cat reveal">
+        <h3><span class="ic">🤖</span> AI / Agentic</h3>
+        <div class="tags"><span>Agentic AI</span><span>LangGraph</span><span>Gemini</span><span>MCP Servers</span><span>RAG Pipelines</span><span>Local LLM POCs</span></div>
+      </div>
+      <div class="skill-cat reveal">
+        <h3><span class="ic">☁️</span> Cloud &amp; DevOps</h3>
+        <div class="tags"><span>GCP (GKE · GCS · Firestore)</span><span>Cloud Functions</span><span>Azure DevOps</span><span>Docker</span><span>Kubernetes</span><span>Nginx</span><span>CI/CD</span></div>
+      </div>
+      <div class="skill-cat reveal">
+        <h3><span class="ic">🧪</span> Testing</h3>
+        <div class="tags"><span>Jest</span><span>React Testing Library</span><span>Cypress</span><span>Playwright</span><span>WebdriverIO</span></div>
+      </div>
+      <div class="skill-cat reveal">
+        <h3><span class="ic">🔐</span> Security</h3>
+        <div class="tags"><span>JWT Authentication</span><span>Mutual TLS (mTLS)</span><span>RBAC</span><span>Token Downscoping</span></div>
+      </div>
+      <div class="skill-cat reveal">
+        <h3><span class="ic">🗄️</span> Database</h3>
+        <div class="tags"><span>MongoDB</span><span>SQL Server</span><span>MySQL</span><span>Azure Cosmos DB</span><span>Oracle</span></div>
+      </div>
+      <div class="skill-cat reveal">
+        <h3><span class="ic">🤝</span> Ways of Working</h3>
+        <div class="tags"><span>Agile / Scrum</span><span>Technical Mentoring</span><span>Code Reviews</span><span>POC Leadership</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Journey / Timeline ── -->
+  <section id="journey" class="section-pad">
+    <div class="reveal">
+      <div class="eyebrow">Career Journey</div>
+      <h2 class="section-title">From engineer to <span class="gradient-text">architect</span></h2>
+      <p class="section-intro">A decade of growing scope — from building simulators to owning the architecture of an OEM's AI platform.</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-item now reveal">
+        <div class="tl-head"><h3>Renault Nissan Technology &amp; Business Centre India</h3><span class="when">Dec 2024 — Present</span></div>
+        <div class="tl-role">Technical Lead / Architect <span class="domain">· Automotive (OEM) · Bengaluru</span></div>
+        <ul>
+          <li>Sole architect of the Renoverse Next-Gen API Platform serving production Web &amp; Android Automotive (IVI) apps.</li>
+          <li>Led AI innovation company-wide; built an IVI AI chatbot with an Agentic layer (Gemini + LangGraph) streamed over GraphQL Subscriptions.</li>
+          <li>Designed dual-mode auth (JWT for web, mTLS for in-vehicle), hosted tool- &amp; Docker-based MCP servers, and built RAG + local-Gemma POCs.</li>
+          <li>Delivered the Caiman telemetry platform — campaigns, rollouts, SSOT signal catalog and React Flow graphs.</li>
+        </ul>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-head"><h3>ACL Digital</h3><span class="when">Sep 2022 — Dec 2024</span></div>
+        <div class="tl-role">Lead Consultant <span class="domain">· Telecom &amp; Industrial Product Engineering · Bengaluru</span></div>
+        <ul>
+          <li>Motorola Solutions (OnePortal): React/Redux + Node.js licensing platform with reseller dashboards on Azure DevOps CI/CD.</li>
+          <li>SKF Bearings: owned the React + Node.js architecture; designed a new BAQ module, EBOM assemblies and time-logging.</li>
+          <li>Single point of contact for Docker pipelines, MySQL, UI test framework and IIS/Nginx deployments.</li>
+        </ul>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-head"><h3>Xebia IT Architects Pvt Ltd</h3><span class="when">Jun 2018 — Sep 2022</span></div>
+        <div class="tl-role">Senior Software Engineer / Lead <span class="domain">· Retail &amp; Supply-Chain · Bengaluru</span></div>
+        <ul>
+          <li>Tesco (PLM): product lifecycle dashboards, custom week calendar and supplier chat with Jest RTL, Cypress and Jenkins CI/CD.</li>
+          <li>Maersk / Damco: React + .NET Core supply-chain apps on Cosmos DB, Azure Logic Apps, Data Lake &amp; Data Factory.</li>
+        </ul>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-head"><h3>Information Quotient Software Services</h3><span class="when">Jun 2017 — Jul 2018</span></div>
+        <div class="tl-role">Software Engineer <span class="domain">· Invoice Automation / OCR</span></div>
+        <ul>
+          <li>Built an OCR invoice-automation product (Tesseract, .NET MVC, React, PHP, Python) used by automotive clients such as Hyundai.</li>
+          <li>Delivered React training and conducted technical interviews.</li>
+        </ul>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-head"><h3>UCertify.com</h3><span class="when">Aug 2016 — Mar 2017</span></div>
+        <div class="tl-role">Software Engineer <span class="domain">· E-Learning Simulations</span></div>
+        <ul>
+          <li>Developed web-based MS Office / Windows simulators for US schools using PHP, React, jQuery and the Smarty engine.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Education -->
+    <div class="card reveal" style="margin-top:30px;display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+      <div style="width:52px;height:52px;border-radius:14px;background:var(--grad-soft);border:1px solid var(--border);display:grid;place-items:center;font-size:26px">🎓</div>
+      <div>
+        <h3 style="font-size:18px">B.Tech / B.E., Computer Science Engineering</h3>
+        <p style="color:var(--muted);font-size:14.5px">RGPV University · 2016</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Contact ── -->
+  <section id="contact" class="section-pad">
+    <div class="contact-card reveal">
+      <h2>Let's build something <span class="gradient-text">exceptional</span></h2>
+      <p>Recruiters and engineering leaders — I'm open to Technical Architect / Lead opportunities (relocation &amp; remote). Let's talk about your platform, your AI ambitions, or your toughest architecture problem.</p>
+      <div class="contact-methods">
+        <a href="mailto:sankalpn27@live.com" class="btn primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          sankalpn27@live.com
+        </a>
+        <a href="https://www.linkedin.com/in/sankalp-narayan" target="_blank" rel="noopener" class="btn ghost">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.51 2.5 2.5 0 0 1 4.98 3.5zM.24 8.25h4.5V24H.24zM8.24 8.25h4.31v2.15h.06c.6-1.14 2.07-2.34 4.26-2.34 4.56 0 5.4 3 5.4 6.9V24h-4.5v-6.15c0-1.47-.03-3.36-2.05-3.36-2.05 0-2.37 1.6-2.37 3.25V24h-4.5z"/></svg>
+          LinkedIn
+        </a>
+        <a href="https://github.com/sankalpsingh2704" target="_blank" rel="noopener" class="btn ghost">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.36-3.88-1.36-.53-1.34-1.3-1.7-1.3-1.7-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.79 2.73 1.27 3.4.97.1-.76.41-1.27.74-1.56-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.69 5.41-5.25 5.69.42.37.8 1.1.8 2.22v3.29c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg>
+          GitHub
+        </a>
+        <a href="tel:+919451852666" class="btn ghost">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.4 2.1L7.6 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"/></svg>
+          +91 94518 52666
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-inner">
+    <div>© <span id="year"></span> Sankalp Narayan · Technical Architect &amp; Evangelist · Bengaluru, India</div>
+    <div>Built with GraphQL-grade attention to detail · Hosted on GitHub Pages</div>
+  </div>
+</footer>
+
+<script>
+  // Mermaid — live architecture diagrams, dark themed to match the page
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    securityLevel: 'loose',
+    themeVariables: {
+      fontFamily: "'Inter', system-ui, sans-serif",
+      primaryColor: '#1e1b4b',
+      primaryBorderColor: '#6366f1',
+      primaryTextColor: '#e8edf7',
+      lineColor: '#64748b',
+      background: '#0d1117'
+    },
+    flowchart: { curve: 'basis', htmlLabels: true },
+    sequence: { actorMargin: 40, mirrorActors: false }
+  });
+
+  // Mobile menu toggle
+  const menuBtn = document.getElementById('menuBtn');
+  const navLinks = document.getElementById('navLinks');
+  menuBtn.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // Reveal-on-scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Active nav link on scroll
+  const sections = [...document.querySelectorAll('section[id]')];
+  const links = [...document.querySelectorAll('.nav-links a')];
+  const navIo = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  sections.forEach(s => navIo.observe(s));
+
+  // Footer year
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
